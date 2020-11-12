@@ -1,6 +1,6 @@
 <template>
   <div class="hello">
-    {{ msg }}
+    <h3>RefReactive demo</h3>
     <hr />
     <div>ref</div>
     <div>{{ count }}</div>
@@ -15,15 +15,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { ref, computed, reactive } from 'vue';
+import { defineComponent, ref, computed, reactive } from 'vue';
 interface DataProps {
   count: number;
   double: number;
   increase: () => void;
 }
 export default defineComponent({
-  name: 'HelloWorld',
+  name: 'RefReactive',
   props: {
     msg: String
   },
@@ -54,6 +53,8 @@ export default defineComponent({
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 .hello {
+  padding: 15px 0;
   color: salmon;
+  background: rgba(0, 255, 1, 0.3);
 }
 </style>
