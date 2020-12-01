@@ -15,14 +15,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive, toRefs, onMounted, onUpdated, onRenderTriggered } from 'vue';
+import { defineComponent, watch, computed, reactive, toRefs, onMounted, onUpdated, onRenderTriggered, onRenderTracked, onBeforeMount } from 'vue';
 interface DataProps {
   count: number;
   double: number;
   increase: () => void;
   numbers: number[];
   person: { name?: string };
-  [propName: string]: any;
 }
 export default defineComponent({
   name: 'ToRefs',
@@ -36,16 +35,27 @@ export default defineComponent({
       double: computed(() => data.count * 2),
       increase: () => {
         data.count++;
+        data.numbers[data.count] = data.count;
+        data.person.name = 'loewe0202 -- ' + data.count;
       },
       numbers: [0, 1, 2],
       person: {}
     });
-    data.numbers[3] = 12;
-    data.person.name = 'loewe0202';
-    setTimeout(() => {
-      data.numbers[4] = 26;
-      data.person.name = '-- loewe0202 --';
-    }, 2500);
+
+    // toRefs
+    const refData = toRefs(data);
+
+    watch([() => data.count, data.person], ([newVal, newVal1], [oldVal, oldVal1]) => {
+      console.log('watch: -- ', newVal, oldVal, newVal1, oldVal1);
+    });
+
+    watch(data.numbers, (newVal, oldVal) => {
+      console.log('watch: --- ', newVal, oldVal);
+    });
+
+    onBeforeMount(() => {
+      console.log('onBeforeMount');
+    });
 
     onMounted(() => {
       console.log('mounted');
@@ -55,12 +65,14 @@ export default defineComponent({
       console.log('updated');
     });
 
-    onRenderTriggered(event => {
-      console.log(event);
+    onRenderTracked(event => {
+      console.log('onRenderTracked: ', event);
     });
 
-    // toRefs
-    const refData = toRefs(data);
+    onRenderTriggered(event => {
+      console.log('onRenderTriggered: ', event);
+    });
+
     return {
       ...refData
     };
